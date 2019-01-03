@@ -24,8 +24,7 @@ $table-border-color: darkgray;
 
   .cost-view,
   .schedule-view {
-    flex-grow: 1;
-    flex-shrink: 1;
+    flex: 1;
   }
 
   .cost-view {
@@ -209,12 +208,6 @@ $table-border-color: darkgray;
     border-top: 1px solid darkgray;
   }
 
-  &.details-visible {
-    .detail-toggle.show {
-      visibility: hidden;
-    }
-  }
-
   @media (max-width: 768px) {
     align-items: center;
 
@@ -257,8 +250,15 @@ $table-border-color: darkgray;
       }
     }
 
-    .detail-toggle.show {
-      display: none;
+    .details {
+      width: auto;
+      .detail-toggle.hide {
+        display: none;
+      }
+    }
+
+    .mobile.detail-toggle.show {
+      margin-top: 2rem;
     }
   }
 
@@ -300,6 +300,17 @@ $table-border-color: darkgray;
       .routing > .title {
         color: limegreen;
       }
+
+    }
+
+    &.details-visible {
+      .detail-toggle.show {
+        visibility: hidden;
+      }
+    }
+
+    .mobile.detail-toggle{
+      display: none;
     }
   }
 }

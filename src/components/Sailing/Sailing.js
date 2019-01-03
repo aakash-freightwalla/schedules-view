@@ -83,9 +83,13 @@ class Sailing extends Component {
   render() {
     const { showDetails } = this.state,
       { viewType } = this.props,
-      classNames = ['sailing-option'];
+      classNames = ['sailing-option'],
+      mobileToggleClassNames = ['mobile', 'detail-toggle'];
     if (showDetails) {
       classNames.push('details-visible');
+      mobileToggleClassNames.push('hide');
+    } else {
+      mobileToggleClassNames.push('show');
     }
     return (
       <div className={classNames.join(' ')}>
@@ -94,6 +98,12 @@ class Sailing extends Component {
           ? this.renderCostView()
           : this.renderScheduleView()}
         {showDetails && this.renderDetails()}
+        <div
+          className={mobileToggleClassNames.join(' ')}
+          onClick={this.onToggleDetails(!showDetails)}
+        >
+          {showDetails ? 'Hide Details' : 'Show Details'}
+        </div>
       </div>
     );
   }
