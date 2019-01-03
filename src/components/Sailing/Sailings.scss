@@ -22,7 +22,8 @@ $table-border-color: darkgray;
     }
   }
 
-  .cost-view, .schedule-view {
+  .cost-view,
+  .schedule-view {
     flex-grow: 1;
     flex-shrink: 1;
   }
@@ -41,7 +42,8 @@ $table-border-color: darkgray;
     position: relative;
     box-sizing: border-box;
 
-    .background, .timeline-container {
+    .background,
+    .timeline-container {
       position: absolute;
       left: 0;
       top: 0;
@@ -94,7 +96,8 @@ $table-border-color: darkgray;
           padding-bottom: 0.8rem;
         }
 
-        .route, .routing {
+        .route,
+        .routing {
           width: 100%;
         }
 
@@ -176,7 +179,8 @@ $table-border-color: darkgray;
           background: white;
           padding: 0.5rem 1rem;
           border-radius: 2px;
-          box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+          box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19),
+          0 6px 6px rgba(0, 0, 0, 0.23);
           font-size: 0.7em;
           line-height: 1.4em;
 
@@ -184,7 +188,8 @@ $table-border-color: darkgray;
             box-sizing: border-box;
             content: '';
             position: absolute;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19),
+            0 6px 6px rgba(0, 0, 0, 0.23);
             left: 4px;
             top: 100%;
             width: 0;
@@ -219,7 +224,9 @@ $table-border-color: darkgray;
     }
     padding-top: 1.5rem;
 
-    .sailing-price, .cost-view, .schedule-view {
+    .sailing-price,
+    .cost-view,
+    .schedule-view {
       width: 100%;
     }
 
@@ -235,10 +242,11 @@ $table-border-color: darkgray;
       flex-wrap: wrap;
       justify-content: space-between;
 
-      .label, .column {
+      .label,
+      .column {
         width: 48%;
 
-        &:not(:nth-last-child(-n+2)) {
+        &:not(:nth-last-child(-n + 2)) {
           margin-bottom: 1rem;
         }
       }

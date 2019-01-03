@@ -15,12 +15,14 @@
     &:focus {
       outline: none;
     }
+
     &.selected {
       color: var(--primary-color);
     }
+
     &:not(:last-child):after {
       position: absolute;
-      content: "";
+      content: '';
       background: lightgray;
       height: 100%;
       width: 1px;

@@ -37,19 +37,22 @@
     .partial {
       justify-content: center;
     }
-    .title, .subtitle {
+    .title,
+    .subtitle {
       text-align: center;
     }
     .to {
       width: 10%;
     }
-    .source, .destination {
+    .source,
+    .destination {
       width: 40%;
     }
     .container {
       width: 16%;
     }
-    .type, .inco {
+    .type,
+    .inco {
       width: 40%;
     }
     .partial.action {
@@ -62,16 +65,20 @@
     }
   }
   @media (min-width: 992px) {
-    .title, .subtitle {
+    .title,
+    .subtitle {
       text-align: left;
     }
-    .source, .destination {
+    .source,
+    .destination {
       width: 15%;
     }
     .inco {
       width: 10%;
     }
-    .to, .container, .type {
+    .to,
+    .container,
+    .type {
       width: 5%;
     }
     .partial.action {
