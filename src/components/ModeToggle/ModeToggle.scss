@@ -1,0 +1,38 @@
+.mode-toggle {
+  display: inline-flex;
+  flex-direction: row;
+  padding: 1rem 2rem;
+  justify-content: center;
+
+  .mode-option {
+    border: none;
+    font-size: 0.7em;
+    position: relative;
+    cursor: pointer;
+    min-width: 100px;
+    color: gray;
+
+    &:focus {
+      outline: none;
+    }
+    &.selected {
+      color: var(--primary-color);
+    }
+    &:not(:last-child):after {
+      position: absolute;
+      content: "";
+      background: lightgray;
+      height: 100%;
+      width: 1px;
+      top: 0;
+      right: 0;
+    }
+  }
+
+  @media (min-width: 576px) {
+    justify-content: flex-end;
+  }
+  @media (max-width: 768px) {
+    display: none;
+  }
+}

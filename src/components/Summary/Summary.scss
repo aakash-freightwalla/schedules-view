@@ -1,0 +1,86 @@
+.summary {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding: 1rem 2rem;
+  background: whitesmoke;
+  border-radius: 6px;
+
+  .title {
+    font-size: 1em;
+    margin-bottom: 0.2rem;
+  }
+
+  .subtitle {
+    font-size: 0.9em;
+    font-weight: 300;
+  }
+
+  .partial {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+
+    @media (max-width: 992px) {
+      &:not(:last-child) {
+        margin-bottom: 1.5rem;
+      }
+    }
+  }
+
+  .modify {
+    margin-bottom: 1rem;
+  }
+
+  @media (min-width: 576px) {
+    justify-content: space-around;
+    .partial {
+      justify-content: center;
+    }
+    .title, .subtitle {
+      text-align: center;
+    }
+    .to {
+      width: 10%;
+    }
+    .source, .destination {
+      width: 40%;
+    }
+    .container {
+      width: 16%;
+    }
+    .type, .inco {
+      width: 40%;
+    }
+    .partial.action {
+      flex-direction: row;
+      justify-content: center;
+    }
+    .modify {
+      margin-bottom: unset;
+      margin-right: 1rem;
+    }
+  }
+  @media (min-width: 992px) {
+    .title, .subtitle {
+      text-align: left;
+    }
+    .source, .destination {
+      width: 15%;
+    }
+    .inco {
+      width: 10%;
+    }
+    .to, .container, .type {
+      width: 5%;
+    }
+    .partial.action {
+      width: 25%;
+      align-items: center;
+
+      button.themed {
+        min-width: 120px;
+      }
+    }
+  }
+}

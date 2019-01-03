@@ -1,0 +1,97 @@
+$table-border-color: darkgray;
+
+.search-page {
+  flex-grow: 1;
+  flex-shrink: 1;
+  padding: 0 2.5rem;
+  overflow-y: auto;
+
+  > .title {
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+}
+
+.action-container {
+  display: flex;
+  flex-direction: column;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+  }
+}
+
+.filter {
+  padding: 1rem 0;
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+
+.sailings {
+  background: whitesmoke;
+  margin-bottom: 2rem;
+  border-radius: 6px;
+
+  .sailing-header {
+    display: flex;
+    flex-direction: row;
+
+    > *:first-child {
+      width: 20%;
+      padding: 1rem 1rem 0;
+    }
+
+    .headers {
+      flex-grow: 1;
+      flex-shrink: 1;
+      display: flex;
+      flex-direction: row;
+
+      .column {
+        flex-grow: 1;
+        flex-shrink: 1;
+        font-size: 0.6em;
+        text-transform: uppercase;
+      }
+
+      &.cost-view-header {
+        padding: 1rem 0 0 1rem;
+      }
+    }
+
+    .schedule-view-header {
+      font-size: 0.6em;
+      color: #979797;
+
+      .day {
+        flex: 1;
+        display: flex;
+        align-items: flex-end;
+        padding: 0 0 0.4rem 0.1rem;
+        box-sizing: border-box;
+
+        &:not(:last-child) {
+          border-right: 1px solid #e2e2e2;
+        }
+
+        &:nth-of-type(7n) {
+          border-right-color: darkgray;
+        }
+      }
+
+      .sunday {
+        color: orangered;
+      }
+    }
+
+    @media (max-width: 768px) {
+      display: none;
+    }
+    @media (min-width: 768px) {
+      border-bottom: 1px solid $table-border-color;
+      > *:first-child {
+        border-right: 1px solid $table-border-color;
+      }
+    }
+  }
+}
