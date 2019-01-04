@@ -25,7 +25,12 @@ export function getRandomInt(lower, upper) {
 }
 
 export function getFakeSailing(sailingDate, transitTime) {
-  let departure = sailingDate.toISOString();
+  let departure = sailingDate.toISOString(),
+    cutoffOffset = getRandomInt(1,5),
+    arrival = sailingDate
+      .clone()
+      .add(transitTime, 'days')
+      .toISOString();
   return {
     travelDate: departure,
     travelDays: transitTime,
@@ -34,10 +39,7 @@ export function getFakeSailing(sailingDate, transitTime) {
       rate: 575,
       rateType: '20\''
     },
-    deliveryDate: sailingDate
-      .clone()
-      .add(transitTime + 2, 'days')
-      .toISOString(),
+    deliveryDate: arrival,
     transhipment: 'Direct',
     routeDetails: {
       routing: 'Direct Shipment',
@@ -53,24 +55,21 @@ export function getFakeSailing(sailingDate, transitTime) {
       dstPort: 'Felixstowe Port, United Kingdom',
       portOpenDate: sailingDate
         .clone()
-        .subtract(4, 'days')
+        .subtract(cutoffOffset + 3, 'days')
         .toISOString(),
       ensCutoffDateTime: sailingDate
         .clone()
-        .subtract(3, 'days')
+        .subtract(cutoffOffset + 2, 'days')
         .toISOString(),
       docCutoffDateTime: sailingDate
         .clone()
-        .subtract(2, 'days')
+        .subtract(cutoffOffset + 1, 'days')
         .toISOString(),
       portCutoffDateTime: sailingDate
         .clone()
-        .subtract(1, 'days')
+        .subtract(cutoffOffset, 'days')
         .toISOString(),
-      vesselArrivalDate: sailingDate
-        .clone()
-        .add(transitTime, 'days')
-        .toISOString()
+      vesselArrivalDate: arrival
     },
     costDetails: {
       totalCost: 53225,
@@ -161,7 +160,7 @@ export function getFakeSailingData(nos) {
     let earliest = moment().add(3, 'days'),
       latest = earliest.add(getRandomInt(10, 20), 'days'),
       reference = getRandomDate(earliest, latest);
-    return getFakeSailing(reference, getRandomInt(5, 15));
+    return getFakeSailing(reference, getRandomInt(10, 25));
   }).sort(({ travelDate: a }, { travelDate: b }) => {
     let am = moment(a),
       bm = moment(b);

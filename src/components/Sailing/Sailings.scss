@@ -94,34 +94,8 @@ $table-border-color: darkgray;
           align-content: flex-end;
           padding-bottom: 0.8rem;
         }
-
-        .route,
-        .routing {
-          width: 100%;
-        }
-
-        .route {
-          font-weight: bolder;
-        }
-
-        .departure {
-          position: relative;
-          padding-right: 0.5rem;
-
-          &:after {
-            content: '';
-            position: absolute;
-            background: gray;
-            top: 50%;
-            right: 0;
-            width: 1px;
-            height: 75%;
-            transform: translateY(-50%);
-          }
-        }
-
-        .carrier {
-          padding-left: 0.5rem;
+        .end {
+          text-align: right;
         }
       }
 
@@ -148,6 +122,9 @@ $table-border-color: darkgray;
           display: flex;
           align-items: flex-end;
           padding: 0 0 0.2rem 0.2rem;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
 
           span {
             font-weight: bolder;
@@ -160,42 +137,6 @@ $table-border-color: darkgray;
 
           &.mark {
             border-left: 1px solid var(--primary-color-translucent-border);
-          }
-
-          &:hover + .tooltip-container {
-            visibility: visible;
-          }
-        }
-
-        .tooltip-container {
-          position: absolute;
-          bottom: calc(100% + 5px);
-          visibility: hidden;
-        }
-
-        .tooltip {
-          position: relative;
-          background: white;
-          padding: 0.5rem 1rem;
-          border-radius: 2px;
-          box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19),
-          0 6px 6px rgba(0, 0, 0, 0.23);
-          font-size: 0.7em;
-          line-height: 1.4em;
-
-          &:before {
-            box-sizing: border-box;
-            content: '';
-            position: absolute;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19),
-            0 6px 6px rgba(0, 0, 0, 0.23);
-            left: 4px;
-            top: 100%;
-            width: 0;
-            height: 0;
-            border-left: 5px solid transparent;
-            border-right: 5px solid transparent;
-            border-top: 5px solid white;
           }
         }
       }
@@ -227,6 +168,7 @@ $table-border-color: darkgray;
       align-items: center;
       padding: 0 1rem;
       justify-content: space-evenly;
+
       .detail-toggle.show {
         display: none;
       }
@@ -255,6 +197,7 @@ $table-border-color: darkgray;
 
     .details {
       width: auto;
+
       .detail-toggle.hide {
         display: none;
       }
@@ -294,10 +237,10 @@ $table-border-color: darkgray;
 
       .column {
         width: 25%;
-        padding-right: 1rem;
+        padding: 1.8rem 1rem 0 0;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+        justify-content: flex-start;
       }
 
       .routing > .title {
@@ -312,7 +255,7 @@ $table-border-color: darkgray;
       }
     }
 
-    .mobile.detail-toggle{
+    .mobile.detail-toggle {
       display: none;
     }
   }

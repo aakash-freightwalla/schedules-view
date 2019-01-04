@@ -65,7 +65,8 @@ class Sailing extends Component {
         date: PropTypes.number,
         reference: PropTypes.object
       })
-    )
+    ),
+    changeCalender: PropTypes.func
   };
   
   static defaultProps = {
@@ -206,108 +207,81 @@ class Sailing extends Component {
     );
   }
   
-  renderSailingInfo(departure) {
-    const {
-      routeDetails: { routing, srcPort, dstPort, carrier }
-    } = this.props;
+  renderTimelineInfo(marks) {
     return (
       <div className='info'>
-        <div
-          className='content'
-          style={{
-            left: `${departure.offset * 100}%`,
-            right: 0
-          }}
-        >
-          <span className='route'>{`${srcPort} to ${dstPort}`}</span>
-          <span className='routing'>{routing}</span>
-          <span className='departure'>
-                        {departure.date.format('Do MMMM')}
-                    </span>
-          <span className='carrier'>{carrier}</span>
-        </div>
+        {marks.reduce(
+          (components, { start, end }, key) => {
+            if (start.mark) {
+              components.push(
+                <div
+                  key={`start-${key}`}
+                  className='content start'
+                  style={{
+                    left: `${start.offset * 100}%`
+                  }}
+                >
+                  {start.date.format(start.format)}<br/>
+                  {start.text}
+                </div>
+              );
+            }
+            
+            if (end.mark) {
+              components.push(
+                <div
+                  key={key}
+                  className='content end'
+                  style={{
+                    right: `${end.offset * 100}%`
+                  }}
+                >
+                  {end.date.format(end.format)}<br/>
+                  {end.text}
+                </div>
+              );
+            }
+            
+            return components;
+          },
+          []
+        )}
       </div>
     );
   }
   
-  renderTimeline(computedOffsets) {
-    const {
-        earliest,
-        latest,
-        departure,
-        arrival,
-        offsets,
-        unit
-      } = computedOffsets,
-      { travelDays } = this.props;
+  renderTimeline(marks) {
     return (
       <div className='timeline'>
-        <div
-          className='blocks complete-block'
-          style={{
-            left: `${earliest.offset * 100}%`,
-            right: `${latest.offset * 100}%`
-          }}
-        >
-          &nbsp;
-        </div>
-        <div
-          className='blocks sailing-block'
-          style={{
-            left: `${departure.offset * 100}%`,
-            right: `${arrival.offset * 100}%`
-          }}
-        >
-          <span>{travelDays}</span>&nbsp;Days
-        </div>
-        {offsets.map(({ date, format, offset, mark, text }, key) => {
-          let left = offset * 100,
-            right = (1 - (offset + unit)) * 100,
-            classNames = ['blocks', 'event-block'];
-          if (mark) {
-            classNames.push('mark');
-          }
-          return [
-            <div
-              key={`${key}-event`}
-              className={classNames.join(' ')}
-              style={{
-                left: `${left}%`,
-                right: `${right}%`
-              }}
-            >
-              &nbsp;
-            </div>,
-            <div
-              key={`${key}-tooltip`}
-              className='tooltip-container'
-              style={{
-                left: `${left}%`
-              }}
-            >
-              <div className='tooltip'>
-                {text}
-                <br/>
-                {date.format(format)}
+        {marks.map(
+          ({ start, end, className, content }, key) => {
+            const classNames = ['blocks', className];
+            return (
+              <div
+                key={key}
+                className={classNames.join(' ')}
+                style={{
+                  left: `${start.offset * 100}%`,
+                  right: `${end.offset * 100}%`
+                }}
+              >
+                {content}
               </div>
-            </div>
-          ];
-        })}
+            );
+          }
+        )}
       </div>
     );
   }
   
   renderScheduleView() {
-    const { calender } = this.props,
-      offsets = this.getSailingComputedOffsets(),
-      { departure } = offsets,
-      unit = 1 / calender.length;
+    const marks = this.getComputedMarks();
     return (
       <div className='schedule-view'>
         {this.renderCalenderBackground()}
         <div className='timeline-container'>
-          {this.renderSailingInfo(departure)}
-          {this.renderTimeline({ ...offsets, unit })}
+          {this.renderTimelineInfo(marks)}
+          {this.renderTimeline(marks)}
         </div>
       </div>
     );
@@ -346,95 +320,76 @@ class Sailing extends Component {
     );
   }
   
-  getSailingComputedOffsets() {
-    const { calender, routeDetails } = this.props,
-      unitOffset = 1 / calender.length,
+  getComputedMarks() {
+    const {
+        calender,
+        travelDays,
+        routeDetails
+      } = this.props,
+      { length } = calender,
+      unit = 1 / calender.length,
+      calenderEarliest = calender[0].reference,
       calenderLatest = calender[calender.length - 1].reference,
-      ensCutoffDateTime = moment(routeDetails.ensCutoffDateTime),
-      docCutoffDateTime = moment(routeDetails.docCutoffDateTime),
       portCutoffDateTime = moment(routeDetails.portCutoffDateTime),
       vesselDepartureDate = moment(routeDetails.vesselDepartureDate),
-      vesselArrivalDate = moment.min(
-        moment(routeDetails.vesselArrivalDate),
-        calenderLatest
-      ),
-      deliveryDate = moment.min(
-        moment(this.props.deliveryDate),
-        calenderLatest
-      ),
-      earliest = {
-        date: ensCutoffDateTime,
-        offset: 0
-      },
-      latest = {
-        date: deliveryDate,
-        offset: 0
-      },
-      departure = {
-        date: vesselDepartureDate,
-        offset: 0
-      },
-      arrival = {
-        date: vesselArrivalDate,
-        offset: 0
-      },
-      offsets = [
-        {
-          date: ensCutoffDateTime,
-          offset: 0,
-          mark: false,
-          text: 'ENS Cutoff',
-          format: 'LLLL'
-        },
-        {
-          date: docCutoffDateTime,
-          offset: 0,
-          mark: true,
-          text: 'Doc. Cutoff',
-          format: 'LLLL'
-        },
-        {
+      vesselArrivalDate = moment(routeDetails.vesselArrivalDate);
+    
+    const marks = [
+      {
+        start: {
           date: portCutoffDateTime,
-          offset: 0,
+          offset: -1,
           mark: true,
           text: 'Port Cutoff',
-          format: 'LLLL'
+          format: 'Do MMM'
         },
-        {
-          date: deliveryDate,
-          offset: 0,
+        end: {
+          date: vesselArrivalDate,
+          offset: -1,
+          mark: false
+        },
+        className: 'complete-block',
+        content: ''
+      },
+      {
+        start: {
+          date: vesselDepartureDate,
+          offset: -1,
           mark: true,
-          text: 'Delivery Date',
-          format: 'LLLL'
-        }
-      ];
-    calender.forEach(({ reference }, i) => {
-      const offset = i / calender.length;
-      if (earliest.date.isSame(reference, 'days')) {
-        earliest.offset = offset;
+          text: 'Shipment Starts',
+          format: 'Do MMM'
+        },
+        end: {
+          date: vesselArrivalDate,
+          offset: -1,
+          mark: true,
+          text: 'Shipment Arrives',
+          format: 'Do MMM'
+        },
+        className: 'sailing-block',
+        content: `${travelDays} Days`
       }
-      if (latest.date.isSame(reference, 'days')) {
-        latest.offset = 1 - (offset + unitOffset);
+    ];
+    
+    marks.forEach(({ start, end }) => {
+      if (start.date.isBefore(calenderEarliest, 'day')) {
+        start.mark = false;
+        start.offset = 0;
+      } else {
+        start.offset = Math.ceil(start.date.diff(calenderEarliest, 'days', true));
       }
-      if (departure.date.isSame(reference, 'days')) {
-        departure.offset = offset;
+      start.offset = start.offset / length;
+      
+      if (end.date.isAfter(calenderLatest, 'day')) {
+        end.mark = false;
+        end.offset = calender.length - 1;
+      } else {
+        end.offset = Math.ceil(end.date.diff(calenderEarliest, 'days', true));
       }
-      if (arrival.date.isSame(reference, 'days')) {
-        arrival.offset = 1 - (offset + unitOffset);
-      }
-      offsets.forEach(each => {
-        if (each.date.isSame(reference, 'days')) {
-          each.offset = offset;
-        }
-      });
+      end.offset = 1 - (end.offset / length + unit);
     });
-    return {
-      earliest,
-      latest,
-      departure,
-      arrival,
-      offsets
-    };
+    
+    return marks;
   }
   
   onToggleDetails(showDetails) {

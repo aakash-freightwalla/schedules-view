@@ -4,21 +4,52 @@ import Summary from '../Summary/Summary';
 import ModeToggle from '../ModeToggle/ModeToggle';
 import { MODE_OPTIONS } from '../../misc/templates';
 import Sailing from '../Sailing/Sailing';
-import { findEarliest, getCalender } from '../../misc/lib';
+import { getCalender } from '../../misc/lib';
+import CHEVRON_LEFT_ICON from '../../assets/chevron-left.svg';
+import CHEVRON_RIGHT_ICON from '../../assets/chevron-right.svg';
 import './Search.scss';
+import moment from 'moment';
 
 class Search extends Component {
   static propTypes = {
     summary: PropTypes.object,
-    sailings: PropTypes.array
+    sailings: PropTypes.array,
+    margin: PropTypes.number
+  };
+  
+  static defaultProps = {
+    margin: 1
   };
   
   constructor(props) {
     super(props);
     this.onModeChange = this.onModeChange.bind(this);
+    this.onCalenderChange = this.onCalenderChange.bind(this);
+    this.changeCalender = this.changeCalender.bind(this);
+    
+    const { sailings, margin } = props;
+    let earliest = moment.min(
+      sailings.map(
+        ({ routeDetails }) => moment(routeDetails.portCutoffDateTime)
+      )
+      ),
+      latest = moment.max(
+        sailings.map(
+          ({ routeDetails }) => moment(routeDetails.vesselArrivalDate)
+        )
+      );
+    earliest.subtract(margin, 'days');
+    latest.add(margin, 'days');
+    latest.subtract(3, 'weeks');
+    
     this.state = {
       viewType: 'COST',
-      minDate: new Date()
+      earliest,
+      latest,
+      calender: getCalender(
+        earliest,
+        4
+      )
     };
   }
   
@@ -30,6 +61,7 @@ class Search extends Component {
         <Summary {...summary} />
         <div className='action-container'>
           <div className='filter'>Filter View</div>
+          <div className='pricing-history'>Pricing History</div>
           <ModeToggle
             options={MODE_OPTIONS}
             onSelectionChange={this.onModeChange}
@@ -42,8 +74,7 @@ class Search extends Component {
   
   renderContent() {
     const { sailings } = this.props,
-      { viewType } = this.state,
-      { calender } = this.getCalender();
+      { calender, viewType } = this.state;
     return (
       <div className='sailings'>
         {this.renderHeader(calender)}
@@ -52,6 +83,7 @@ class Search extends Component {
             key={key}
             viewType={viewType}
             calender={calender}
+            changeCalender={this.changeCalender}
             {...each}
           />
         ))}
@@ -60,81 +92,142 @@ class Search extends Component {
   }
   
   renderHeader(calender) {
-    const {
-        sailings: [first]
-      } = this.props,
-      { rate } = first,
-      { viewType } = this.state;
-    let headers = null,
-      headerClassName = 'schedule-view-header';
+    const { viewType } = this.state;
+    let content = null,
+      headerClassName = '';
     if (viewType === 'COST') {
+      content = this.renderTableHeader();
       headerClassName = 'cost-view-header';
-      headers = [
-        {
-          title: 'Date of Sailing',
-          className: 'departure'
-        },
-        {
-          title: 'Sailing Days',
-          className: 'routing'
-        },
-        {
-          title: `Freight Per ${rate.rateType}`,
-          className: 'rate'
-        },
-        {
-          title: 'Delivery Date',
-          className: 'delivery'
-        }
-      ];
+    } else {
+      content = this.renderCalender(calender);
+      headerClassName = 'schedule-view-header';
     }
     return (
       <div className='sailing-header'>
         <div className='blank'>&nbsp;</div>
         <div className={['headers', headerClassName].join(' ')}>
-          {headers
-            ? headers.map(({ title, className }, key) => (
-              <div
-                key={key}
-                className={['column', className].join(' ')}
-              >
-                {title}
-              </div>
-            ))
-            : calender.map(({ date, day }, key) => {
-              const classNames = ['day'];
-              if (day === 0) {
-                classNames.push('sunday');
-              }
-              return (
-                <div
-                  key={key}
-                  className={classNames.join(' ')}
-                >
-                  {date}
-                </div>
-              );
-            })}
+          {content}
         </div>
       </div>
     );
+  }
+  
+  renderTableHeader() {
+    const {
+        sailings: [first]
+      } = this.props,
+      { rate } = first;
+    
+    let headers = [
+      {
+        title: 'Date of Sailing',
+        className: 'departure'
+      },
+      {
+        title: 'Sailing Days',
+        className: 'routing'
+      },
+      {
+        title: `Freight Per ${rate.rateType}`,
+        className: 'rate'
+      },
+      {
+        title: 'Delivery Date',
+        className: 'delivery'
+      }
+    ];
+    
+    return headers.map(({ title, className }, key) => (
+      <div
+        key={key}
+        className={['column', className].join(' ')}
+      >
+        {title}
+      </div>
+    ));
+  }
+  
+  renderCalender(calender) {
+    const firstVisibleDay = 0,
+      lastVisibleDay = 27;
+    
+    return calender.map(({ date, day, reference }, key) => {
+      const classNames = ['day'];
+      let content = null;
+      if (key === firstVisibleDay) {
+        classNames.push('icon', 'left');
+        content = [
+          <img
+            key='left'
+            alt='left'
+            className='icon'
+            src={CHEVRON_LEFT_ICON}
+            onClick={this.onCalenderChange({ offset: -1, unit: 'weeks' })}
+          />,
+          <span key='month' className='month left'>
+            {reference.format('MMMM, YY')}
+          </span>
+        ];
+      } else if (key === lastVisibleDay) {
+        classNames.push('icon', 'right');
+        content = [
+          <img
+            key='right'
+            alt='right'
+            className='icon'
+            src={CHEVRON_RIGHT_ICON}
+            onClick={this.onCalenderChange({ offset: 1, unit: 'weeks' })}
+          />,
+          <span key='month' className='month right'>
+            {reference.format('MMMM, YY')}
+          </span>
+        ];
+      } else {
+        if (day === 0) {
+          classNames.push('sunday');
+        }
+        content = date;
+      }
+      return (
+        <div
+          key={key}
+          className={classNames.join(' ')}
+        >
+          {content}
+        </div>
+      );
+    });
   }
   
   onModeChange(viewType) {
     this.setState({ viewType });
   }
   
-  getCalender() {
-    const { sailings } = this.props,
-      earliest = findEarliest(sailings, 'travelDate').subtract(3, 'days'),
-      calender = getCalender(earliest, 4);
-    return {
-      earliest,
-      calender
-    };
+  changeCalender({ offset, unit }) {
+    const { earliest, latest, calender: [calenderEarliest] } = this.state;
+    
+    let scrollDate = calenderEarliest.reference.clone();
+    scrollDate.add(offset, unit);
+    
+    scrollDate = moment.max(
+      moment.min(
+        scrollDate,
+        latest
+      ),
+      earliest
+    );
+    if (scrollDate.isSame(calenderEarliest.reference, 'day')) {
+      return;
+    }
+    
+    this.setState({
+      calender: getCalender(scrollDate, 4)
+    });
+  }
+  
+  onCalenderChange(params) {
+    return () => this.changeCalender(params);
   }
 }
-
-Search.propTypes = {};
 
 export default Search;

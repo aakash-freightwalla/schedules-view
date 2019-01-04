@@ -12,19 +12,32 @@ $table-border-color: darkgray;
   }
 }
 
-.action-container {
-  display: flex;
-  flex-direction: column;
-
-  @media (min-width: 768px) {
-    flex-direction: row;
-  }
-}
-
 .filter {
   padding: 1rem 0;
-  flex-grow: 1;
-  flex-shrink: 1;
+}
+
+.pricing-history {
+  padding: 1rem 0;
+}
+
+.action-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  .filter, .pricing-history {
+    width: 100%;
+  }
+
+  @media (min-width: 768px) {
+    justify-content: flex-end;
+    .filter {
+      width: 70%;
+    }
+    .pricing-history {
+      width: 30%;
+    }
+  }
 }
 
 .sailings {
@@ -35,6 +48,7 @@ $table-border-color: darkgray;
   .sailing-header {
     display: flex;
     flex-direction: row;
+    height: 40px;
 
     > *:first-child {
       width: 20%;
@@ -69,6 +83,7 @@ $table-border-color: darkgray;
         align-items: flex-end;
         padding: 0 0 0.4rem 0.1rem;
         box-sizing: border-box;
+        position: relative;
 
         &:not(:last-child) {
           border-right: 1px solid #e2e2e2;
@@ -76,6 +91,26 @@ $table-border-color: darkgray;
 
         &:nth-of-type(7n) {
           border-right-color: darkgray;
+        }
+
+        .icon {
+          width: 12px;
+          cursor: pointer;
+        }
+
+        .month {
+          width: max-content;
+          position: absolute;
+          bottom: 22px;
+          color: black;
+          font-weight: bolder;
+          &.left {
+            left: 4px;
+          }
+          &.right {
+            right: 10px;
+            text-align: right;
+          }
         }
       }
 
