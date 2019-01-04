@@ -161,7 +161,7 @@ class Search extends Component {
             onClick={this.onCalenderChange({ offset: -1, unit: 'weeks' })}
           />,
           <span key='month' className='month left'>
-            {reference.format('MMMM, YY')}
+            {reference.format('MMMM YYYY')}
           </span>
         ];
       } else if (key === lastVisibleDay) {
@@ -175,7 +175,7 @@ class Search extends Component {
             onClick={this.onCalenderChange({ offset: 1, unit: 'weeks' })}
           />,
           <span key='month' className='month right'>
-            {reference.format('MMMM, YY')}
+            {reference.format('MMMM YYYY')}
           </span>
         ];
       } else {

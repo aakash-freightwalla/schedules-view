@@ -327,7 +327,6 @@ class Sailing extends Component {
         routeDetails
       } = this.props,
       { length } = calender,
-      unit = 1 / calender.length,
       calenderEarliest = calender[0].reference,
       calenderLatest = calender[calender.length - 1].reference,
       portCutoffDateTime = moment(routeDetails.portCutoffDateTime),
