@@ -104,9 +104,12 @@ $table-border-color: darkgray;
           bottom: 22px;
           color: black;
           font-weight: bolder;
+          z-index: 1;
+
           &.left {
             left: 4px;
           }
+
           &.right {
             right: 10px;
             text-align: right;
