@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Summary from '../Summary/Summary';
 import ModeToggle from '../ModeToggle/ModeToggle';
-import { MODE_OPTIONS } from '../../misc/templates';
 import Sailing from '../Sailing/Sailing';
 import { getCalender } from '../../misc/lib';
 import CHEVRON_LEFT_ICON from '../../assets/chevron-left.svg';
@@ -62,10 +61,7 @@ class Search extends Component {
         <div className='action-container'>
           <div className='filter'>Filter View</div>
           <div className='pricing-history'>Pricing History</div>
-          <ModeToggle
-            options={MODE_OPTIONS}
-            onSelectionChange={this.onModeChange}
-          />
+          <ModeToggle onSelectionChange={this.onModeChange}/>
         </div>
         {this.renderContent()}
       </div>

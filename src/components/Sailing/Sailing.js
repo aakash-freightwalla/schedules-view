@@ -376,7 +376,7 @@ class Sailing extends Component {
         start.mark = false;
         start.offset = 0;
       } else {
-        start.offset = Math.ceil(start.date.diff(calenderEarliest, 'days', true));
+        start.offset = start.date.diff(calenderEarliest, 'days');
       }
       start.offset = start.offset / length;
       
@@ -384,9 +384,9 @@ class Sailing extends Component {
         end.mark = false;
         end.offset = calender.length - 1;
       } else {
-        end.offset = Math.ceil(end.date.diff(calenderEarliest, 'days', true));
+        end.offset = end.date.diff(calenderEarliest, 'days');
       }
-      end.offset = 1 - (end.offset / length + unit);
+      end.offset = 1 - (end.offset + 1) / length;
     });
     
     return marks;

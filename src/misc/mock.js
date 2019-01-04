@@ -26,7 +26,7 @@ export function getRandomInt(lower, upper) {
 
 export function getFakeSailing(sailingDate, transitTime) {
   let departure = sailingDate.toISOString(),
-    cutoffOffset = getRandomInt(1,5),
+    cutoffOffset = getRandomInt(1, 5),
     arrival = sailingDate
       .clone()
       .add(transitTime, 'days')
@@ -156,8 +156,10 @@ export function getFakeSailing(sailingDate, transitTime) {
 }
 
 export function getFakeSailingData(nos) {
+  const today = moment();
   return Array.from({ length: nos }, () => {
-    let earliest = moment().add(3, 'days'),
+    let earliest = moment(today.format('DD-MM-YYYY'), 'DD-MM-YYYY')
+        .add(3, 'days'),
       latest = earliest.add(getRandomInt(10, 20), 'days'),
       reference = getRandomDate(earliest, latest);
     return getFakeSailing(reference, getRandomInt(10, 25));
