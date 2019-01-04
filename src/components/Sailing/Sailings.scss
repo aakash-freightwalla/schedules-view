@@ -151,12 +151,11 @@ $table-border-color: darkgray;
 
   @media (max-width: 768px) {
     align-items: center;
+    padding: 1.5rem 0;
 
     &:not(:last-child) {
-      padding-bottom: 1.5rem;
       border-bottom: 1px solid $table-border-color;
     }
-    padding-top: 1.5rem;
 
     .sailing-price,
     .cost-view,
@@ -179,6 +178,7 @@ $table-border-color: darkgray;
       flex-direction: row;
       flex-wrap: wrap;
       justify-content: space-between;
+      margin-bottom: 2rem;
 
       .label,
       .column {
@@ -201,10 +201,6 @@ $table-border-color: darkgray;
       .detail-toggle.hide {
         display: none;
       }
-    }
-
-    .mobile.detail-toggle.show {
-      margin-top: 2rem;
     }
   }
 
