@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import Summary from '../Summary/Summary';
 import ModeToggle from '../ModeToggle/ModeToggle';
 import Sailing from '../Sailing/Sailing';
-import { getCalender } from '../../misc/lib';
+import { getCalendar } from '../../misc/lib';
 import CHEVRON_LEFT_ICON from '../../assets/chevron-left.svg';
 import CHEVRON_RIGHT_ICON from '../../assets/chevron-right.svg';
-import './Search.scss';
 import moment from 'moment';
+import './Search.scss';
 
 class Search extends Component {
   static propTypes = {
@@ -23,8 +23,8 @@ class Search extends Component {
   constructor(props) {
     super(props);
     this.onModeChange = this.onModeChange.bind(this);
-    this.onCalenderChange = this.onCalenderChange.bind(this);
-    this.changeCalender = this.changeCalender.bind(this);
+    this.onCalendarChange = this.onCalendarChange.bind(this);
+    this.changeCalendar = this.changeCalendar.bind(this);
     
     const { sailings, margin } = props;
     let earliest = moment.min(
@@ -45,7 +45,7 @@ class Search extends Component {
       viewType: 'COST',
       earliest,
       latest,
-      calender: getCalender(
+      calendar: getCalendar(
         earliest,
         4
       )
@@ -70,16 +70,16 @@ class Search extends Component {
   
   renderContent() {
     const { sailings } = this.props,
-      { calender, viewType } = this.state;
+      { calendar, viewType } = this.state;
     return (
       <div className='sailings'>
-        {this.renderHeader(calender)}
+        {this.renderHeader(calendar)}
         {sailings.map((each, key) => (
           <Sailing
             key={key}
             viewType={viewType}
-            calender={calender}
-            changeCalender={this.changeCalender}
+            calendar={calendar}
+            changeCalendar={this.changeCalendar}
             {...each}
           />
         ))}
@@ -87,7 +87,7 @@ class Search extends Component {
     );
   }
   
-  renderHeader(calender) {
+  renderHeader(calendar) {
     const { viewType } = this.state;
     let content = null,
       headerClassName = '';
@@ -95,7 +95,7 @@ class Search extends Component {
       content = this.renderTableHeader();
       headerClassName = 'cost-view-header';
     } else {
-      content = this.renderCalender(calender);
+      content = this.renderCalendar(calendar);
       headerClassName = 'schedule-view-header';
     }
     return (
@@ -143,11 +143,11 @@ class Search extends Component {
     ));
   }
   
-  renderCalender(calender) {
+  renderCalendar(calendar) {
     const firstVisibleDay = 0,
       lastVisibleDay = 27;
     
-    return calender.map(({ date, day, reference }, key) => {
+    return calendar.map(({ date, day, reference }, key) => {
       const classNames = ['day'];
       let content = null;
       if (key === firstVisibleDay) {
@@ -158,7 +158,7 @@ class Search extends Component {
             alt='left'
             className='icon'
             src={CHEVRON_LEFT_ICON}
-            onClick={this.onCalenderChange({ offset: -1, unit: 'weeks' })}
+            onClick={this.onCalendarChange({ offset: -1, unit: 'weeks' })}
           />,
           <span key='month' className='month left'>
             {reference.format('MMMM YYYY')}
@@ -172,7 +172,7 @@ class Search extends Component {
             alt='right'
             className='icon'
             src={CHEVRON_RIGHT_ICON}
-            onClick={this.onCalenderChange({ offset: 1, unit: 'weeks' })}
+            onClick={this.onCalendarChange({ offset: 1, unit: 'weeks' })}
           />,
           <span key='month' className='month right'>
             {reference.format('MMMM YYYY')}
@@ -199,10 +199,10 @@ class Search extends Component {
     this.setState({ viewType });
   }
   
-  changeCalender({ offset, unit }) {
-    const { earliest, latest, calender: [calenderEarliest] } = this.state;
+  changeCalendar({ offset, unit }) {
+    const { earliest, latest, calendar: [calendarEarliest] } = this.state;
     
-    let scrollDate = calenderEarliest.reference.clone();
+    let scrollDate = calendarEarliest.reference.clone();
     scrollDate.add(offset, unit);
     
     scrollDate = moment.max(
@@ -212,17 +212,17 @@ class Search extends Component {
       ),
       earliest
     );
-    if (scrollDate.isSame(calenderEarliest.reference, 'day')) {
+    if (scrollDate.isSame(calendarEarliest.reference, 'day')) {
       return;
     }
     
     this.setState({
-      calender: getCalender(scrollDate, 4)
+      calendar: getCalendar(scrollDate, 4)
     });
   }
   
-  onCalenderChange(params) {
-    return () => this.changeCalender(params);
+  onCalendarChange(params) {
+    return () => this.changeCalendar(params);
   }
 }
 

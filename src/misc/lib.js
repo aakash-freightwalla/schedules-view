@@ -1,4 +1,4 @@
-export function getCalender(minDate, weeks) {
+export function getCalendar(minDate, weeks) {
   return Array.from({ length: 7 * weeks }, (_, i) => {
     let offset = minDate.clone().add(i, 'days');
     return {

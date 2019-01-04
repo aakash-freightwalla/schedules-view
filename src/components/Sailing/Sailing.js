@@ -59,14 +59,14 @@ class Sailing extends Component {
     }),
     
     viewType: PropTypes.oneOf(['COST', 'SCHEDULE']),
-    calender: PropTypes.arrayOf(
+    calendar: PropTypes.arrayOf(
       PropTypes.shape({
         day: PropTypes.number,
         date: PropTypes.number,
         reference: PropTypes.object
       })
     ),
-    changeCalender: PropTypes.func
+    changeCalendar: PropTypes.func
   };
   
   static defaultProps = {
@@ -188,11 +188,11 @@ class Sailing extends Component {
     );
   }
   
-  renderCalenderBackground() {
-    const { calender } = this.props;
+  renderCalendarBackground() {
+    const { calendar } = this.props;
     return (
       <div className='background'>
-        {calender.map(({ day }, key) => {
+        {calendar.map(({ day }, key) => {
           const classNames = ['day'];
           if (day === 0) {
             classNames.push('sunday');
@@ -278,7 +278,7 @@ class Sailing extends Component {
     const marks = this.getComputedMarks();
     return (
       <div className='schedule-view'>
-        {this.renderCalenderBackground()}
+        {this.renderCalendarBackground()}
         <div className='timeline-container'>
           {this.renderTimelineInfo(marks)}
           {this.renderTimeline(marks)}
@@ -322,13 +322,13 @@ class Sailing extends Component {
   
   getComputedMarks() {
     const {
-        calender,
+        calendar,
         travelDays,
         routeDetails
       } = this.props,
-      { length } = calender,
-      calenderEarliest = calender[0].reference,
-      calenderLatest = calender[calender.length - 1].reference,
+      { length } = calendar,
+      calendarEarliest = calendar[0].reference,
+      calendarLatest = calendar[calendar.length - 1].reference,
       portCutoffDateTime = moment(routeDetails.portCutoffDateTime),
       vesselDepartureDate = moment(routeDetails.vesselDepartureDate),
       vesselArrivalDate = moment(routeDetails.vesselArrivalDate);
@@ -371,19 +371,19 @@ class Sailing extends Component {
     ];
     
     marks.forEach(({ start, end }) => {
-      if (start.date.isBefore(calenderEarliest, 'day')) {
+      if (start.date.isBefore(calendarEarliest, 'day')) {
         start.mark = false;
         start.offset = 0;
       } else {
-        start.offset = start.date.diff(calenderEarliest, 'days');
+        start.offset = start.date.diff(calendarEarliest, 'days');
       }
       start.offset = start.offset / length;
       
-      if (end.date.isAfter(calenderLatest, 'day')) {
+      if (end.date.isAfter(calendarLatest, 'day')) {
         end.mark = false;
-        end.offset = calender.length - 1;
+        end.offset = calendar.length - 1;
       } else {
-        end.offset = end.date.diff(calenderEarliest, 'days');
+        end.offset = end.date.diff(calendarEarliest, 'days');
       }
       end.offset = 1 - (end.offset + 1) / length;
     });

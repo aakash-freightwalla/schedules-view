@@ -10,7 +10,7 @@
 - [x] List/Cost View
 - [x] Responsive List/Cost View
 - [x] Schedules View
-- [x] Scrollable calender
+- [x] Scrollable calendar
 - [ ] Support for Indirect Sailing
 - [x] Show/Hide Details behaviour
 - [ ] Cost Details
