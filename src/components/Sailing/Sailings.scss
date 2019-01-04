@@ -103,6 +103,14 @@ $table-border-color: darkgray;
         height: 40px;
         position: relative;
 
+        .scroll-end {
+          width: 12px;
+          cursor: pointer;
+          align-self: center;
+          transform: translateY(0.2rem);
+          margin-right: 0.2rem;
+        }
+
         .blocks {
           user-select: none;
           box-sizing: border-box;
@@ -121,6 +129,7 @@ $table-border-color: darkgray;
           color: white;
           display: flex;
           align-items: flex-end;
+          justify-content: space-between;
           padding: 0 0 0.2rem 0.2rem;
           white-space: nowrap;
           overflow: hidden;

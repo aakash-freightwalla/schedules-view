@@ -4,8 +4,8 @@ import Summary from '../Summary/Summary';
 import ModeToggle from '../ModeToggle/ModeToggle';
 import Sailing from '../Sailing/Sailing';
 import { getCalendar } from '../../misc/lib';
-import CHEVRON_LEFT_ICON from '../../assets/chevron-left.svg';
-import CHEVRON_RIGHT_ICON from '../../assets/chevron-right.svg';
+import CHEVRON_LEFT_ICON from '../../assets/chevron-left-dark.svg';
+import CHEVRON_RIGHT_ICON from '../../assets/chevron-right-dark.svg';
 import moment from 'moment';
 import './Search.scss';
 

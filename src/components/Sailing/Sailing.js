@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import CHEVRON_RIGHT_ICON from '../../assets/chevron-right-light.svg';
 import './Sailings.scss';
 
 class Sailing extends Component {
@@ -324,7 +325,8 @@ class Sailing extends Component {
     const {
         calendar,
         travelDays,
-        routeDetails
+        routeDetails,
+        changeCalendar
       } = this.props,
       { length } = calendar,
       calendarEarliest = calendar[0].reference,
@@ -347,6 +349,7 @@ class Sailing extends Component {
           offset: -1,
           mark: false
         },
+        scrollable: false,
         className: 'complete-block',
         content: ''
       },
@@ -365,13 +368,15 @@ class Sailing extends Component {
           text: 'Shipment Arrives',
           format: 'Do MMM'
         },
+        scrollable: true,
         className: 'sailing-block',
         content: `${travelDays} Days`
       }
     ];
     
-    marks.forEach(({ start, end }) => {
-      if (start.date.isBefore(calendarEarliest, 'day')) {
+    marks.forEach((mark) => {
+      const { scrollable, start, end } = mark;
+      if (start.date.isBefore(calendarEarliest, 'days')) {
         start.mark = false;
         start.offset = 0;
       } else {
@@ -379,9 +384,22 @@ class Sailing extends Component {
       }
       start.offset = start.offset / length;
       
-      if (end.date.isAfter(calendarLatest, 'day')) {
+      if (end.date.isAfter(calendarLatest, 'days')) {
         end.mark = false;
         end.offset = calendar.length - 1;
+        if (scrollable) {
+          const scrollOffset = Math.ceil(end.date.diff(calendarLatest, 'weeks', true));
+          mark.content = [
+            <span key={0}>{mark.content}</span>,
+            <img
+              key={1}
+              alt='scroll-end'
+              className='scroll-end'
+              src={CHEVRON_RIGHT_ICON}
+              onClick={() => changeCalendar({ offset: scrollOffset, unit: 'weeks' })}
+            />
+          ];
+        }
       } else {
         end.offset = end.date.diff(calendarEarliest, 'days');
       }
